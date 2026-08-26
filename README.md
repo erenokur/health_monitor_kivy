@@ -1,45 +1,75 @@
-# Heath Monitor Kivy
+# Health Monitor Kivy
 
-This project is a small Kivy desktop app that tracks user blood pressure and medicine.
+This project is a small Kivy app that tracks user blood pressure and medicine.
 
-## Requirements
+## Development Environment Setup
 
-- Python 3.12.3
-- pip
+### Prerequisites
 
-## Install
+- **Python 3.12+**
+- **pip** and **virtualenv**
 
-Create or activate the virtual environment, then install dependencies:
+### Windows, macOS, and Linux
 
-```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
-
-If you are using this workspace's existing virtualenv:
+Create a virtual environment and install the required dependencies:
 
 ```bash
+# 1. Create a virtual environment
+python -m venv .venv
+
+# 2. Activate the virtual environment
+# On Linux / macOS:
 source .venv/bin/activate
+# On Windows:
+.venv\Scripts\activate
+
+# 3. Install dependencies
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Run
+## Running the App Locally
 
-Start the app with:
+Start the app from within your active virtual environment:
 
 ```bash
 python main.py
 ```
 
-Or with the workspace virtualenv directly:
+## Building & Deploying
 
-```bash
-.venv/bin/python main.py
-```
+This project uses [Buildozer](https://buildozer.readthedocs.io/en/latest/) for compiling and packaging the app for mobile and desktop platforms.
+
+### Android Deployment (Linux / macOS)
+
+We have provided a custom build script (`build_android.sh`) to automatically patch a known issue in the `python-for-android` toolchain regarding pip 26 platform compatibility when building for multiple architectures.
+
+1. Ensure your virtual environment is active.
+2. Ensure you have the Android SDK/NDK dependencies installed (Buildozer usually downloads these automatically).
+3. Run the custom build script:
+   ```bash
+   ./build_android.sh
+   ```
+4. The generated APK will be placed in the `bin/` directory.
+5. To deploy and run directly on an Android device connected via USB (with USB Debugging enabled):
+   ```bash
+   buildozer android deploy run
+   ```
+
+### macOS Deployment
+
+To build a standalone macOS application bundle:
+
+1. Ensure you are on a macOS machine.
+2. Run buildozer targeting macOS:
+   ```bash
+   buildozer osx debug
+   ```
+3. The generated `.app` bundle will be located in the `bin/` directory.
 
 ## Files
 
 - `main.py`: Kivy application entrypoint
-- `holiday_manager.py`: holiday add/list/delete screen for `tatiller.json`
-- `servis_settings.json`: persisted app settings
-- `tatiller.json`: holiday definitions used in the calculation
+- `health_monitor.db`: SQLite database for storing readings
+- `buildozer.spec`: Buildozer configuration file for packaging
+- `build_android.sh`: Custom build script to resolve pip cross-compilation errors
